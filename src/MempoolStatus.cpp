@@ -138,14 +138,6 @@ MempoolStatus::read_mempool()
         }
         cryptonote::get_transaction_prefix_hash(tx, tx_prefix_hash);
 
-      /*  if (!parse_and_validate_tx_from_blob(
-                _tx_info.tx_json, tx, tx_hash, tx_prefix_hash))
-        {
-
-            cerr << "Cant make tx from _tx_info.tx_blob" << endl;
-            return false;
-        }*/
-
         mempool_size_kB += _tx_info.blob_size;
 
         local_copy_of_mempool_txs.push_back(mempool_tx {tx_hash, tx});

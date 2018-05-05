@@ -28,9 +28,9 @@
 # (c) 2014-2016 cpp-ethereum contributors.
 #------------------------------------------------------------------------------
 
-set(LIBS common;blocks;cryptonote_basic;cryptonote_core;multisig;
-		cryptonote_protocol;daemonizer;mnemonics;epee;lmdb;device;
-		blockchain_db;ringct;wallet;cncrypto;easylogging;version;checkpoints)
+set(LIBS common;blocks;cryptonote_core;
+		cryptonote_protocol;daemonizer;mnemonics;lmdb;
+		blockchain_db;ringct;wallet;cncrypto)
 
 set(Xmr_INCLUDE_DIRS "${CPP_MONERO_DIR}")
 

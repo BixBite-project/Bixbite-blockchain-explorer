@@ -111,7 +111,6 @@ set(LIBRARIES
         ringct
         common
         mnemonics
-        epee
         ${Boost_LIBRARIES}
         pthread
         unbound
