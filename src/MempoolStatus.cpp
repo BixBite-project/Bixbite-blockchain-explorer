@@ -31,60 +31,60 @@ MempoolStatus::start_mempool_status_thread()
     {
         m_thread = boost::thread{[]()
         {
-         try
-         {
-             uint64_t loop_index {0};
-
-            // so that network status is checked every minute
-            uint64_t loop_index_divider = std::max<uint64_t>(1, 60 / mempool_refresh_time);
-
-            while (true)
+            try
             {
+                uint64_t loop_index {0};
 
-             // we just query network status every minute. No sense
-             // to do it as frequently as getting mempool data.
-             if (loop_index % loop_index_divider == 0)
-             {
-                 if (!MempoolStatus::read_network_info())
-                 {
-                     network_info local_copy = current_network_info;
+                // so that network status is checked every minute
+                uint64_t loop_index_divider = std::max<uint64_t>(1, 60 / mempool_refresh_time);
 
-                     cerr << " Cant read network info "<< endl;
+                while (true)
+                {
 
-                     local_copy.current = false;
+                    // we just query network status every minute. No sense
+                    // to do it as frequently as getting mempool data.
+                    if (loop_index % loop_index_divider == 0)
+                    {
+                        if (!MempoolStatus::read_network_info())
+                        {
+                            network_info local_copy = current_network_info;
 
-                     current_network_info = local_copy;
-                 }
-                 else
-                 {
-                     cout << "Current network info read, ";
-                     loop_index = 0;
-                 }
-             }
+                            cerr << " Cant read network info "<< endl;
 
-             if (MempoolStatus::read_mempool())
-             {
-                 vector<mempool_tx> current_mempool_txs = get_mempool_txs();
+                            local_copy.current = false;
 
-                 cout << "mempool status txs: "
-                      << current_mempool_txs.size()
-                      << endl;
-             }
+                            current_network_info = local_copy;
+                        }
+                        else
+                        {
+                            cout << "Current network info read, ";
+                            loop_index = 0;
+                        }
+                    }
 
-             // when we reach top of the blockchain, update
-             // the emission amount every minute.
-             boost::this_thread::sleep_for(
-                     boost::chrono::seconds(mempool_refresh_time));
+                    if (MempoolStatus::read_mempool())
+                    {
+                        vector<mempool_tx> current_mempool_txs = get_mempool_txs();
 
-             ++loop_index;
+                        cout << "mempool status txs: "
+                             << current_mempool_txs.size()
+                             << endl;
+                    }
 
-             } // while (true)
-         }
-         catch (boost::thread_interrupted&)
-         {
-             cout << "Mempool status thread interrupted." << endl;
-             return;
-        }
+                    // when we reach top of the blockchain, update
+                    // the emission amount every minute.
+                    boost::this_thread::sleep_for(
+                                boost::chrono::seconds(mempool_refresh_time));
+
+                    ++loop_index;
+
+                } // while (true)
+            }
+            catch (boost::thread_interrupted&)
+            {
+                cout << "Mempool status thread interrupted." << endl;
+                return;
+            }
 
         }}; //  m_thread = boost::thread{[]()
 
@@ -110,6 +110,8 @@ MempoolStatus::read_mempool()
     // get txs in the mempool
     std::vector<tx_info> mempool_tx_info;
 
+    //rpc.save_bc();
+
     if (!rpc.get_mempool(mempool_tx_info))
     {
         cerr << "Getting mempool failed " << endl;
@@ -130,13 +132,24 @@ MempoolStatus::read_mempool()
         crypto::hash tx_hash;
         crypto::hash tx_prefix_hash;
 
-        if(!cryptonote::get_transaction_hash(tx, tx_hash))
+        /* xmreg::parse_str_secret_key(_tx_info.id_hash, tx_hash);
+
+        if(!cryptonote::get_pool_transaction(tx_hash, tx))
         {
 
             cerr << "Cant make tx from _tx_info" << endl;
             return false;
         }
         cryptonote::get_transaction_prefix_hash(tx, tx_prefix_hash);
+
+
+*/
+        if (!parse_and_validate_tx_from_blob(
+                    _tx_info.tx_blob, tx, tx_hash, tx_prefix_hash))
+        {
+            cerr << "Cant make tx from _tx_info.tx_blob" << endl;
+            return false;
+        }
 
         mempool_size_kB += _tx_info.blob_size;
 
@@ -152,7 +165,7 @@ MempoolStatus::read_mempool()
 
         // sum xmr in inputs and ouputs in the given tx
         const array<uint64_t, 4>& sum_data = summary_of_in_out_rct(
-               tx, output_pub_keys, input_key_imgs);
+                    tx, output_pub_keys, input_key_imgs);
 
 
 
@@ -195,7 +208,7 @@ MempoolStatus::read_mempool()
             // one sub-address
             last_tx.pID = 's';
         }
-       // } // if (hex_to_pod(_tx_info.id_hash, mem_tx_hash))
+        // } // if (hex_to_pod(_tx_info.id_hash, mem_tx_hash))
 
     } // for (size_t i = 0; i < mempool_tx_info.size(); ++i)
 
@@ -231,8 +244,8 @@ MempoolStatus::read_network_info()
     string error_msg;
 
     if (!rpc.get_dynamic_per_kb_fee_estimate(
-            FEE_ESTIMATE_GRACE_BLOCKS,
-            fee_estimated, error_msg))
+                FEE_ESTIMATE_GRACE_BLOCKS,
+                fee_estimated, error_msg))
     {
         cerr << "rpc.get_dynamic_per_kb_fee_estimate failed" << endl;
         return false;
@@ -260,7 +273,7 @@ MempoolStatus::read_network_info()
     local_copy.outgoing_connections_count = rpc_network_info.outgoing_connections_count;
     local_copy.incoming_connections_count = rpc_network_info.incoming_connections_count;
     local_copy.white_peerlist_size        = rpc_network_info.white_peerlist_size;
-    //local_copy.nettype                    = rpc_network_info.testnet ? cryptonote::network_type::TESTNET : 
+    //local_copy.nettype                    = rpc_network_info.testnet ? cryptonote::network_type::TESTNET :
     //                                        rpc_network_info.stagenet ? cryptonote::network_type::STAGENET : cryptonote::network_type::MAINNET;
     local_copy.cumulative_difficulty      = rpc_network_info.cumulative_difficulty;
     //local_copy.block_size_limit           = rpc_network_info.block_size_limit;
@@ -269,15 +282,15 @@ MempoolStatus::read_network_info()
 
 
     strncpy(local_copy.block_size_limit_str, fmt::format("{:0.2f}",
-                                             static_cast<double>(
-                                             local_copy.block_size_limit ) / 2.0 / 1024.0).c_str(),
-                                             sizeof(local_copy.block_size_limit_str));
+                                                         static_cast<double>(
+                                                             local_copy.block_size_limit ) / 2.0 / 1024.0).c_str(),
+            sizeof(local_copy.block_size_limit_str));
 
 
     strncpy(local_copy.block_size_median_str, fmt::format("{:0.2f}",
-                                              static_cast<double>(
-                                              local_copy.block_size_median) / 1024.0).c_str(),
-                                              sizeof(local_copy.block_size_median_str));
+                                                          static_cast<double>(
+                                                              local_copy.block_size_median) / 1024.0).c_str(),
+            sizeof(local_copy.block_size_median_str));
 
     epee::string_tools::hex_to_pod(rpc_network_info.top_block_hash,
                                    local_copy.top_block_hash);

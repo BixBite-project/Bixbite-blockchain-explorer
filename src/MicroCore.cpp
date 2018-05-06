@@ -10,8 +10,8 @@ namespace
 {
     // NOTE: These values should match blockchain.cpp
     // TODO: Refactor
-    const uint64_t mainnet_hard_fork_version_1_till = 1009826;
-    const uint64_t testnet_hard_fork_version_1_till = 624633;
+    const uint64_t mainnet_hard_fork_version_1_till = 1;
+    const uint64_t testnet_hard_fork_version_1_till = 1;
 }
 
 
@@ -53,7 +53,7 @@ MicroCore::init(const string& _blockchain_path)
 
     //db_flags |= MDB_RDONLY;
     db_flags |= MDB_NOLOCK;
-    //db_flags |= MDB_SYNC;
+   // db_flags |= MDB_SYNC;
 
     // uint64_t DEFAULT_FLAGS = MDB_NOMETASYNC | MDB_NORDAHEAD;
 
@@ -68,7 +68,7 @@ MicroCore::init(const string& _blockchain_path)
 
     uint64_t hard_fork_version_1_till = use_testnet ? testnet_hard_fork_version_1_till : mainnet_hard_fork_version_1_till;
 
-    m_hardfork = new HardFork(*db, 1, hard_fork_version_1_till);
+    m_hardfork = new HardFork(*db, 3, hard_fork_version_1_till);
 
     try
     {

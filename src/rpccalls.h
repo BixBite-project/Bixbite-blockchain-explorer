@@ -91,6 +91,9 @@ public:
     get_current_height();
 
     bool
+    save_bc();
+
+    bool
     get_mempool(vector<tx_info>& mempool_txs);
 
     bool

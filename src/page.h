@@ -516,7 +516,9 @@ public:
         uint64_t no_of_last_blocks {no_blocks_on_index + 1};
 
         // get the current blockchain height. Just to check
-        uint64_t height = core_storage->get_current_blockchain_height();
+
+        uint64_t height =  rpc.get_current_height();
+       // uint64_t height = core_storage->get_current_blockchain_height();
 
         // initalise page tempate map with basic info about blockchain
         mstch::map context {

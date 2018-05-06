@@ -111,6 +111,7 @@ set(LIBRARIES
         ringct
         common
         mnemonics
+		easylogging
         ${Boost_LIBRARIES}
         pthread
         unbound

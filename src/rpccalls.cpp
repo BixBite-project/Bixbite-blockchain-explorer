@@ -65,6 +65,33 @@ rpccalls::get_current_height()
 }
 
 bool
+rpccalls::save_bc()
+{
+    COMMAND_RPC_SAVE_BC::request   req;
+    COMMAND_RPC_SAVE_BC::response  res;
+
+    std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
+
+    if (!connect_to_monero_deamon())
+    {
+        cerr << "get_current_height: not connected to deamon" << endl;
+        return false;
+    }
+
+    bool r = epee::net_utils::invoke_http_json(
+            "/save_bc",
+            req, res, m_http_client);
+
+    if (!r)
+    {
+        cerr << "Error connecting to Bixbite deamon at "
+             << deamon_url << endl;
+        return false;
+    }
+
+    return true;
+}
+bool
 rpccalls::get_mempool(vector<tx_info>& mempool_txs)
 {
 
