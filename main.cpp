@@ -97,7 +97,7 @@ main(int ac, const char* av[])
 
 
     // set  monero log output level
-    uint32_t log_level = 0;
+   // uint32_t log_level = 0;
     //mlog_configure("", true);
 
     //cast port number in string to uint

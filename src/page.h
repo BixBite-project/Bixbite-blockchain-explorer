@@ -5,7 +5,9 @@
 #ifndef CROWXMR_PAGE_H
 #define CROWXMR_PAGE_H
 
-//#include <serialization/serialization.h>
+//#include "cryptonote_core/cryptonote_format_utils.h"
+//#include "serialization/serialization.h"
+
 
 #include "mstch/mstch.hpp"
 
@@ -518,7 +520,7 @@ public:
         // get the current blockchain height. Just to check
 
         uint64_t height =  rpc.get_current_height();
-       // uint64_t height = core_storage->get_current_blockchain_height();
+       // uint64_t height = core_storage->get_current_blockchain_height()+1;
 
         // initalise page tempate map with basic info about blockchain
         mstch::map context {
@@ -544,6 +546,7 @@ public:
                 {"show_cache_times"         , show_cache_times}
         };
 
+       // height1=height;
         context.emplace("txs", mstch::array()); // will keep tx to show
 
         // get reference to txs mstch map to be field below
@@ -1098,9 +1101,9 @@ public:
         block blk;
 
         //cout << "_blk_height: " << _blk_height << endl;
-
-        uint64_t current_blockchain_height
-                =  core_storage->get_current_blockchain_height();
+      uint64_t current_blockchain_height=rpc.get_current_height();
+      //  uint64_t current_blockchain_height
+       //         =  core_storage->get_current_blockchain_height();
 
         if (_blk_height > current_blockchain_height)
         {
@@ -1393,7 +1396,7 @@ public:
 
                     tx_context["delta_time"] = age.first;
 
-                    uint64_t bc_height = core_storage->get_current_blockchain_height();
+                    uint64_t bc_height =  rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
                     tx_context["confirmations"] = bc_height - (tx_blk_height - 1);
 
@@ -4040,7 +4043,7 @@ public:
         string blk_timestamp_utc = xmreg::timestamp_to_str_gm(tx_timestamp);
 
         // get the current blockchain height. Just to check
-        uint64_t bc_height = core_storage->get_current_blockchain_height();
+        uint64_t bc_height =  rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         tx_details txd = get_tx_details(tx, is_coinbase_tx, block_height, bc_height);
 
@@ -4231,7 +4234,7 @@ public:
         json& j_data = j_response["data"];
 
         uint64_t current_blockchain_height
-                =  core_storage->get_current_blockchain_height();
+                =   rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         uint64_t block_height {0};
 
@@ -4374,7 +4377,7 @@ public:
         json& j_data = j_response["data"];
 
         uint64_t current_blockchain_height
-                =  core_storage->get_current_blockchain_height();
+                =   rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         uint64_t block_height {0};
 
@@ -4494,7 +4497,7 @@ public:
 
         uint64_t local_copy_server_timestamp = server_timestamp;
 
-        uint64_t height = core_storage->get_current_blockchain_height();
+        uint64_t height =  rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         // calculate starting and ending block numbers to show
         int64_t start_height = height - limit * (page + 1);
@@ -4615,7 +4618,7 @@ public:
 
         uint64_t local_copy_server_timestamp = server_timestamp;
 
-        uint64_t height = core_storage->get_current_blockchain_height();
+        uint64_t height =  rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         // get mempool tx from mempoolstatus thread
         vector<MempoolStatus::mempool_tx> mempool_data
@@ -4702,7 +4705,7 @@ public:
 
         uint64_t local_copy_server_timestamp = server_timestamp;
 
-        uint64_t height = core_storage->get_current_blockchain_height();
+        uint64_t height =  rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         uint64_t search_str_length = search_text.length();
 
@@ -5081,7 +5084,7 @@ public:
 
         // and now serach for outputs in last few blocks in the blockchain
 
-        uint64_t height = core_storage->get_current_blockchain_height();
+        uint64_t height =  rpc.get_current_height();//core_storage->get_current_blockchain_height();
 
         // calculate starting and ending block numbers to show
         int64_t start_height = height - no_of_last_blocks;
@@ -5262,7 +5265,7 @@ public:
                 {"git_branch_name"     , string {GIT_BRANCH_NAME}},
                 {"monero_version_full" , string {Bixbite_VERSION_FULL}},
                 {"api"                 , ONIONEXPLORER_RPC_VERSION},
-                {"blockchain_height"   , core_storage->get_current_blockchain_height()}
+                {"blockchain_height"   ,  rpc.get_current_height()/*core_storage->get_current_blockchain_height()*/}
         };
 
         j_response["status"]  = "success";
@@ -6112,7 +6115,7 @@ private:
             txd.blk_height = core_storage->get_db().get_tx_block_height(txd.hash);
 
             // get the current blockchain height. Just to check
-            uint64_t bc_height = core_storage->get_current_blockchain_height();
+            uint64_t bc_height = rpc.get_current_height();// core_storage->get_current_blockchain_height();
 
             txd.no_confirmations = bc_height - (txd.blk_height);
         }

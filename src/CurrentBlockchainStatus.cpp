@@ -56,7 +56,7 @@ CurrentBlockchainStatus::start_monitor_blockchain_thread()
                        Emission current_emission = total_emission_atomic;
 
                        current_height = core_storage->get_current_blockchain_height();
-
+                        //current_height = rpc.get_current_height();
                        // scan 10000 blocks for emissiom or if we are at the top of
                        // the blockchain, only few top blocks
                        update_current_emission_amount();
