@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Play%3Aregular&subset=latin" type="text/css" media="all">
     <meta charset="UTF-8">
     <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
     {{#refresh}}
@@ -8,6 +9,7 @@
     {{/refresh}}
     <title>Bixbite Blockchain Explorer</title>
     <!--<link rel="stylesheet" type="text/css" href="/css/style.css">-->
+	
     <style type="text/css">
         {{#css_styles}}{{/css_styles}}
     </style>
@@ -18,16 +20,15 @@
 <body>
 <div>
 
-    <div class="center">
-        <h1 class="center"><a href="/">Bixbite Blockchain Explorer</a></h1>
-        <h4 style="font-size: 15px; margin: 0px">({{^enable_js}}no javascript - {{/enable_js}}no cookies - no web analytics trackers - no images - open sourced)</h4>
+    <div class="center header">
+        <h1 class="center" style="font-weight:200;"><a href="/" style="color:inherit;text-decoration:inherit;">Bixbite Blockchain Explorer</a></h1>
+<!--        <h4 style="font-size: 15px; margin: 0px">({{^enable_js}}no javascript - {{/enable_js}}no cookies - no web analytics trackers - no images - open sourced)</h4> -->
     </div>
 
 
     <div class="center">
         <form action="/search" method="get" style="width:100%; margin-top:15px" class="style-1">
-            <input type="text" name="value" size="120"
-                   placeholder="block height, block hash, transaction hash">
+            <input type="text" name="value" size="120" placeholder="block height, block hash, transaction hash"  autocomplete="off">
             <input type="submit" value="Search">
         </form>
     </div>

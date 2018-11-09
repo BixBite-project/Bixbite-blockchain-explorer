@@ -1,8 +1,8 @@
 body {
     margin: 0;
     padding: 0;
-    color: #E0115F;
     background-color: white;
+    font-family: Play, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -16,10 +16,18 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px;*/
 }
 
+.header {
+    background-color: rgb(91, 21, 40);
+    width: 100%;
+    color: white;
+    font-weight: 100;
+    line-height: 50px;
+}
+
 tr, li, #pages, .info {
-    font-family: "Lucida Console", Monaco, monospace;
-    font-size  : 12px;
-    height: 22px;
+    font-family: Play, sans-serif;
+    font-size: 13px;
+    height: 23px;
 }
 
 #pages
@@ -33,12 +41,12 @@ td {
 
 a:link {
     text-decoration: none;
-    color: #E0115F;
+    color: #af2849;
 }
 
 a:visited {
     text-decoration: none;
-    color: #E0115F;
+    color: #af2849;
 }
 
 a:hover {
@@ -63,10 +71,43 @@ form {
 }
 .style-1 input[type="text"]:focus,
 .style-1 input[type="text"].focus {
-    border: solid 1px #707070;
-    box-shadow: 0 0 5px 1px #969696;
+    border-color:rgba(175, 40, 73, 0.75);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(175, 40, 73, 0.75);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(175, 40, 73, 0.75);
 }
 
+.style-1 input[type="text"] {
+    height: 23px;
+    padding: 6px 12px;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    outline: none;
+}
+
+input[type="submit"] {
+    padding: 8px 12px;
+    color: #ffffff;
+    background-color: #5b1528;
+    border-color: #5b1528;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    left: -4px;
+    border-radius: 0 4px 4px 0;
+    border: 2px solid #5b1528;
+}
+
+input[type="submit"]:hover {
+    background-color: #430f1d;
+    border-color: #430f1d;
+}
 
 .tabs {
     position: relative;
@@ -104,7 +145,8 @@ form {
 }
 
 [type=radio]:checked ~ label {
-    background: #FFF5EE;
+    background: #af2849;
+    color: white;
     border-bottom: 1px solid white;
     z-index: 2;
 }
