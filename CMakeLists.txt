@@ -105,20 +105,22 @@ set(LIBRARIES
         cryptonote_core
         cryptonote_protocol
         daemonizer
-        cncrypto
+	    cncrypto
         blocks
         lmdb
         ringct
         common
         mnemonics
-		easylogging
+	    easylogging
         ${Boost_LIBRARIES}
         pthread
         unbound
-        curl
+        curl	
         crypto
         ssl)
-
+if (WIN32)
+     set(LIBRARIES ${LIBRARIES} crypt32)
+endif()
 if(APPLE)
     set(LIBRARIES ${LIBRARIES} "-framework IOKit -framework PCSC")
 else()

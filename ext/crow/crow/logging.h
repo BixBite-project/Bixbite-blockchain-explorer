@@ -51,7 +51,7 @@ namespace crow
 
                 tm my_tm;
 
-#ifdef _MSC_VER
+#ifdef WIN32
                 gmtime_s(&my_tm, &t);
 #else
                 gmtime_r(&t, &my_tm);

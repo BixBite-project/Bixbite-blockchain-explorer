@@ -168,7 +168,13 @@ timestamp_to_str_gm(time_t timestamp, const char* format)
     char str_buff[TIME_LENGTH];
 
     std::tm tmp;
+	
+#ifdef WIN32
+	gmtime_s(&tmp,t);
+#else
     gmtime_r(t, &tmp);
+#endif
+    
 
     size_t len;
 
@@ -1239,7 +1245,11 @@ get_human_readable_timestamp(uint64_t ts)
 
     struct tm tm;
 
+#ifdef WIN32
+	gmtime_s(&tm,&tt);
+#else
     gmtime_r(&tt, &tm);
+#endif
 
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %I:%M:%S", &tm);
 
